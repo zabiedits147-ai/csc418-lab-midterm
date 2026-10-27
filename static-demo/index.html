@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Assignment Submission Portal (Demo)</title>
+</head>
+<body>
+  <h1>Assignment Submission Portal (Demo)</h1>
+  <p id="message"></p>
+
+  <form id="form">
+    <p>Name: <input id="name"></p>
+    <p>Registration No: <input id="reg_no"></p>
+    <p>Assignment Title: <input id="title"></p>
+    <p>Submission URL: <input id="url"></p>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2>Saved Submissions</h2>
+  <table border="1" cellpadding="5">
+    <thead><tr><th>Name</th><th>Reg No</th><th>Title</th><th>URL</th></tr></thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <script>
+    var message = document.getElementById("message");
+    var list = document.getElementById("list");
+
+    function isValidUrl(value) {
+      try {
+        var u = new URL(value);
+        return u.protocol === "http:" || u.protocol === "https:";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    document.getElementById("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var fields = [
+        ["name", "Name"],
+        ["reg_no", "Registration number"],
+        ["title", "Assignment title"],
+        ["url", "Submission URL"]
+      ];
+      var data = {};
+      for (var i = 0; i < fields.length; i++) {
+        var value = document.getElementById(fields[i][0]).value.trim();
+        if (!value) {
+          message.style.color = "red";
+          message.textContent = fields[i][1] + " is required.";
+          return;
+        }
+        data[fields[i][0]] = value;
+      }
+      if (!isValidUrl(data.url)) {
+        message.style.color = "red";
+        message.textContent = "Submission URL is invalid.";
+        return;
+      }
+      var row = list.insertRow();
+      [data.name, data.reg_no, data.title, data.url].forEach(function (text) {
+        row.insertCell().textContent = text;
+      });
+      message.style.color = "green";
+      message.textContent = "Submission saved successfully.";
+      document.getElementById("form").reset();
+    });
+  </script>
+</body>
+</html>
