@@ -18,6 +18,25 @@ jobs:
       - name: Send report to local receiver
         if: always()
         run: python send_report.py
+      - name: Email test report
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_USERNAME }}
+          subject: "Test report: ${{ job.status }} - ${{ github.repository }}"
+          body: |
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Overall result: ${{ job.status }}
+            Test counts and individual test results are in the attached report.json.
+          attachments: report.json
   deploy:
     needs: test
     if: github.ref == 'refs/heads/main'

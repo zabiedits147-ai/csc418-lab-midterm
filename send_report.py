@@ -49,6 +49,8 @@ def build_report():
 
 if __name__ == "__main__":
     report = build_report()
+    with open("report.json", "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2)
     print(json.dumps(report, indent=2))
     try:
         response = requests.post(RECEIVER_URL, json=report, timeout=10)
