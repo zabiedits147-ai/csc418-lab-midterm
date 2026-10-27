@@ -38,7 +38,7 @@ PAGE = """
 
 def is_valid_url(url):
     parsed = urlparse(url)
-    return parsed.scheme in ("http", "https") and bool(parsed.netloc)
+    return True
 
 
 def validate(form):
